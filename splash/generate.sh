@@ -2,7 +2,7 @@
 
 OUT_DIR=$1
 
-RESOLUTION="1080x2340"
+RESOLUTION="1080x2160"
 VENDOR=redmi.png
 UBPORTS=bootlogobrand.png
 FASTBOOT=fastboot.png
@@ -10,7 +10,7 @@ YUMI=yumi.png
 BROKEN_YUMI=broken-yumi.png
 UB_WIDTH=460
 
-BMP_OPTIONS="-depth 8 -define bmp:format=bmp3 -density 72x72"
+BMP_OPTIONS="-depth 8 -define bmp:format=bmp3"
 
 OUT_DIR="$(realpath "$OUT_DIR" 2>/dev/null || echo 'out')"
 SCRIPT="$(dirname "$(realpath "$0")")"
@@ -27,11 +27,6 @@ convert -size $RESOLUTION canvas:black \
     "$VENDOR" -gravity Center -geometry +0-80 -composite \
     $BMP_OPTIONS \
     $TMP/1.bmp
-# Fixup: for some reason, the bitmap data must be 2 bytes longer
-echo "000002: d8" | xxd -r - $TMP/1.bmp
-echo "000022: a2" | xxd -r - $TMP/1.bmp
-dd if=/dev/zero of=$TMP/two_null_bytes.bmp bs=1 count=2 2> /dev/null
-cat $TMP/two_null_bytes.bmp >> $TMP/1.bmp
 
 # Fastboot
 convert -size $RESOLUTION canvas:black \
@@ -51,4 +46,5 @@ convert -size $RESOLUTION canvas:black \
 
 xzcat header.img.xz > "$OUT_FILE"
 cat $TMP/1.bmp $TMP/2.bmp $TMP/1.bmp $TMP/4.bmp >> "$OUT_FILE"
+xzcat end.img.xz >> "$OUT_FILE"
 
