@@ -39,3 +39,27 @@ If you'd like to change the splash screen, run
 ./splash/generate.sh out
 fastboot flash splash out/splash.img
 ```
+
+## Building the vendor image
+
+The vendor image is available as a downloadable blob
+[here](https://github.com/ubuntu-touch-violet/ubuntu-touch-violet/releases/tag/20210510).
+If you'd like to build it yourself, the steps are quite similar to those needed
+to build the system image with Halium:
+
+1. Initialize the repo: `repo init -u https://github.com/Halium/android -b halium-9.0 --depth=1`
+2. `repo sync`
+3. Until [this PR](https://github.com/Halium/halium-devices/pull/325) is not
+   merged, you'll have to download the
+   [`fm-bridge`](https://gitlab.com/ubuntu-touch-xiaomi-violet/fm-bridge)
+   repository yourself:
+```
+    mkdir -p vendor/ubports/fm-bridge
+    git clone https://gitlab.com/ubuntu-touch-xiaomi-violet/fm-bridge.git vendor/ubports/fm-bridge
+```
+4. Apply hybris patches: `hybris-patches/apply-patches.sh --mb`
+5. `source build/envsetup.sh && breakfast violet`
+6. `mka vendorimage`
+
+This will generate a file `our/target/product/violet/vendor.img` that can be
+flashed with `fastboot flash vendor vendor.img`.
