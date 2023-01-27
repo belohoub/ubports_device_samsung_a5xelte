@@ -16,6 +16,7 @@ directory called `out/`, then follow the instructions in the
 To manually build this project, follow these steps:
 
 ```bash
+export HOSTCC=gcc-9  # the build breaks with gcc-11
 ./build.sh -b bd  # bd is the name of the build directory
 ./build/prepare-fake-ota.sh out/device_violet.tar.xz ota
 ./build/system-image-from-ota.sh ota/ubuntu_command out

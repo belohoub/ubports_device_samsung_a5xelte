@@ -26,6 +26,9 @@ MAKEOPTS=""
 if [ -n "$CC" ]; then
     MAKEOPTS="CC=$CC"
 fi
+if [ -n "$HOSTCC" ]; then
+    MAKEOPTS="HOSTCC=$HOSTCC $MAKEOPTS"
+fi
 
 cd "$KERNEL_DIR"
 make O="$OUT" $deviceinfo_kernel_defconfig
