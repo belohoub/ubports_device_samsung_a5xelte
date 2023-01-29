@@ -3,6 +3,10 @@ set -ex
 
 TMPDOWN=$1
 INSTALL_MOD_PATH=$2
+if [ "$TARGET_DISTRO" == "focal" ]; then
+    # Modules go under /usr/lib
+    INSTALL_MOD_PATH="$INSTALL_MOD_PATH/usr"
+fi
 HERE=$(pwd)
 source "${HERE}/deviceinfo"
 
@@ -11,6 +15,7 @@ KERNEL_DIR="${KERNEL_DIR%.*}"
 OUT="${TMPDOWN}/KERNEL_OBJ"
 
 mkdir -p "$OUT"
+mkdir -p "${INSTALL_MOD_PATH}"
 
 case "$deviceinfo_arch" in
     aarch64*) ARCH="arm64" ;;
